@@ -2,12 +2,14 @@ import { Entity } from './core/entity.js';
 import { BoxCollider } from './impl/boxCollider.js';
 import { CircleCollider } from './impl/circleCollider.js';
 import { CollisionManager } from './core/collision.js';
+import { Camera } from './core/camera.js';
 let animateId;
 const canv = document.getElementById('canvas');
 canv.height = window.innerHeight;
 canv.width = window.innerWidth;
 const ctx = canv.getContext('2d');
 const imageCache = {};
+const camera = new Camera('canvas', canv.width, canv.height);
 function getImage(src) {
     if (!imageCache[src]) {
         const img = new Image();
@@ -26,7 +28,7 @@ for (let i = 0; i < canv.width / 360; i++) {
     }
 }
 let sprites = [];
-for (let i = 0; i < 500; i++) {
+for (let i = 0; i < 1; i++) {
     let width = 80;
     let height = 70;
     let x = getRandomInRange(0, canv.width - 100);
@@ -39,36 +41,36 @@ for (let i = 0; i < 500; i++) {
     sprites.push(entity);
 }
 
-
 const mouse = new Entity(0, 0, 50, 50, 'mouse.png');
 mouse.addCollider(new CircleCollider(mouse.width / 2, mouse.height / 2, mouse.width / 2))
 mouse.colliders[0].enabled = true;
+mouse.dx = 0.05;
 // mouse.colliders[0].visible = true;
-
-
-
 
 let time = Date.now();
 for (let i = 0; i < sprites.length; i++) {
     sprites[i].colliders[0].enabled = true;
     sprites[i].colliders[0].visible = true;
 }
+
 function animate() {
     const currentTime = Date.now();
     const delta = currentTime - time;
     time = currentTime;
     ctx.clearRect(0, 0, canv.offsetWidth, canv.offsetHeight);
 
+    camera.update();
+    camera.draw(sprites.concat(mouse));
 
     for (let i = 0; i < terrains.length; i++) {
-        terrains[i].draw(ctx);
+        terrains[i].draw(ctx, camera.cameraX, camera.cameraY);
     }
-
     mouse.update(delta);
-    mouse.draw(ctx);
+    mouse.draw(ctx, camera.cameraX, camera.cameraY);
+
     for (let i = 0; i < sprites.length; i++) {
         sprites[i].update(delta);
-        sprites[i].draw(ctx);
+        sprites[i].draw(ctx, camera.cameraX, camera.cameraY);
         if (sprites[i].colliders[0].enabled && mouse.colliders[0].enabled) {
             if (CollisionManager.checkCollision(sprites[i].colliders[0], mouse.colliders[0])) {
                 mouse.dx *= -1;
