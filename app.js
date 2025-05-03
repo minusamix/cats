@@ -48,7 +48,7 @@ mouse.dx = 0.05;
 let time = Date.now();
 for (let i = 0; i < sprites.length; i++) {
     sprites[i].colliders[0].enabled = true;
-    sprites[i].colliders[0].visible = true;
+    // sprites[i].colliders[0].visible = true;
 }
 
 function animate() {
