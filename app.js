@@ -28,7 +28,7 @@ for (let i = 0; i < canv.width / 360; i++) {
     }
 }
 let sprites = [];
-for (let i = 0; i < 1; i++) {
+for (let i = 0; i < 700; i++) {
     let width = 80;
     let height = 70;
     let x = getRandomInRange(0, canv.width - 100);
@@ -36,8 +36,6 @@ for (let i = 0; i < 1; i++) {
     let entity = new Entity(x, y, width, height, 'cat.png');
     entity.addCollider(new CircleCollider(entity.width / 2, entity.height / 2, entity.height / 2));
     entity.addCollider(new BoxCollider(0, 0, entity.width, entity.height));
-    entity.dx = 0;
-    entity.dy = 0.05;
     sprites.push(entity);
 }
 
@@ -79,8 +77,10 @@ function animate() {
         }
         for (let j = i + 1; j < sprites.length; j++) {
             if (CollisionManager.checkCollision(sprites[i].colliders[0], sprites[j].colliders[0])) {
-                sprites[i].dy = 0;
-                sprites[j].dy = 0;
+                sprites[i].dx *= -1;
+                sprites[j].dx *= -1;
+                sprites[i].dy *= -1;
+                sprites[j].dy *= -1;
             }
         }
     }
