@@ -28,7 +28,7 @@ for (let i = 0; i < canv.width / 360; i++) {
     }
 }
 let sprites = [];
-for (let i = 0; i < 700; i++) {
+for (let i = 0; i < 500; i++) {
     let width = 80;
     let height = 70;
     let x = getRandomInRange(0, canv.width - 100);
