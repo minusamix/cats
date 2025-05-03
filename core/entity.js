@@ -28,10 +28,11 @@ export class Entity {
         }
         if (this.y < 0) {
             this.y = 0;
-            this.dy = -this.dy;
+            this.dy = 0;
         } else if (this.y + this.height > this.canv.height) {
             this.y = this.canv.height - this.height;
-            this.dy = -this.dy;
+            this.dy = 0;
+            this.dx = 0;
         }
         this.colliders.forEach(collider => collider.update(this.x, this.y));
     }
