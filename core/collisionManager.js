@@ -28,7 +28,6 @@ export class CollisionManager {
         if (colliderA.type === 'circle' && colliderB.type === 'circle') {
             return this.checkCircleCollision(colliderA, colliderB);
         }
-        // Можно добавить проверки box-circle, ellipse-circle и т.д. при необходимости
         return false;
     }
 }

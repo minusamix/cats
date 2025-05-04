@@ -1,5 +1,5 @@
 export class Entity {
-    constructor(x, y, width, height, imageSrc) {
+    constructor(x, y, width, height, imageSrc, canvas) {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -9,7 +9,8 @@ export class Entity {
         this.colliders = [];
         this.dx = 0.02;
         this.dy = 0.02;
-        this.canv = document.querySelector('#canvas');
+        this.visible = true;
+        this.canvas = canvas;
     }
 
     addCollider(collider) {
@@ -19,25 +20,13 @@ export class Entity {
     update(delta) {
         this.x += this.dx * delta;
         this.y += this.dy * delta;
-        if (this.x < 0) {
-            this.x = 0;
-            this.dx = -this.dx;
-        } else if (this.x + this.width > this.canv.width) {
-            this.x = this.canv.width - this.width;
-            this.dx = -this.dx;
-        }
-        if (this.y < 0) {
-            this.y = 0;
-            this.dy = 0;
-        } else if (this.y + this.height > this.canv.height) {
-            this.y = this.canv.height - this.height;
-            this.dy = 0;
-            this.dx = 0;
-        }
         this.colliders.forEach(collider => collider.update(this.x, this.y));
     }
 
     draw(ctx) {
+        if (this.x + this.width < 0 || this.x - this.width > this.canvas.width || this.y + this.height < 0 || this.y > this.canvas.height) {
+            this.visible = false;
+        }
         if (this.image.complete) {
             ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
         }
