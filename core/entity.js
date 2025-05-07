@@ -1,14 +1,14 @@
+import { Sprite } from './sprite.js';
 export class Entity {
     constructor(x, y, width, height, imageSrc, canvas) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
-        this.image = new Image();
-        this.image.src = imageSrc;
+        this.sprite = new Sprite(imageSrc, width, height);
         this.colliders = [];
-        this.dx = 0.02;
-        this.dy = 0.02;
+        this.dx = 5;
+        this.dy = 5;
         this.visible = true;
         this.canvas = canvas;
     }
@@ -18,18 +18,14 @@ export class Entity {
     }
 
     update(delta) {
+        this.sprite.update(delta);
         this.x += this.dx * delta;
         this.y += this.dy * delta;
         this.colliders.forEach(collider => collider.update(this.x, this.y));
     }
 
     draw(ctx) {
-        if (this.x + this.width < 0 || this.x - this.width > this.canvas.width || this.y + this.height < 0 || this.y > this.canvas.height) {
-            this.visible = false;
-        }
-        if (this.image.complete) {
-            ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
-        }
+        this.sprite.draw(ctx, this.x, this.y);
         this.colliders.forEach(collider => collider.draw(ctx));
     }
 }

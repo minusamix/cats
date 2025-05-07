@@ -17,6 +17,14 @@ export class CollisionManager {
         const distance = Math.sqrt(dx * dx + dy * dy);
         return distance < (a.radius + b.radius);
     }
+    static checkCircleBoxCollision(circle, box) {
+        let closestX = Math.max(box.x, Math.min(circle.x, box.x + box.width));
+        let closestY = Math.max(box.y, Math.min(circle.y, box.y + box.height));
+        let dx = circle.x - closestX;
+        let dy = circle.y - closestY;
+        let distanceSquared = dx * dx + dy * dy;
+        return distanceSquared < circle.radius * circle.radius;
+    }
     static checkCollision(colliderA, colliderB) {
         if (!colliderA.enabled || !colliderB.enabled) return false;
         if (colliderA.type === 'box' && colliderB.type === 'box') {
@@ -27,6 +35,13 @@ export class CollisionManager {
         }
         if (colliderA.type === 'circle' && colliderB.type === 'circle') {
             return this.checkCircleCollision(colliderA, colliderB);
+        }
+        if (colliderA.type === 'circle' && colliderB.type === 'box') {
+            return this.checkCircleBoxCollision(colliderA, colliderB);
+        }
+        if (colliderA.type === 'box' && colliderB.type === 'circle') {
+            return this.checkCircleBoxCollision(colliderB, colliderA);
+
         }
         return false;
     }
