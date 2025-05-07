@@ -28,7 +28,7 @@ function getRandomInRange(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-const mouse = new Player(worldWidth / 2, worldHeight / 2, 100, 80, './cat.png', canv);
+const mouse = new Player(worldWidth / 2, worldHeight / 2, 30, 40, './mouse.png', canv);
 mouse.addCollider(new BoxCollider(0, 0, mouse.width, mouse.height));
 mouse.colliders[0].enabled = true
 // mouse.colliders[0].visible = true;
@@ -48,8 +48,9 @@ for (let i = 0; i < worldWidth / 360; i++) {
     const tree = new Entity(x, y, 360, 360, './tree.png', canv);
     tree.dx = 0;
     tree.dy = 0;
-    tree.addCollider(new BoxCollider(0 + tree.width * 0.4, 0 + tree.height * 0.5, tree.width * 0.2, tree.height * 0.5));
+    tree.addCollider(new BoxCollider(0 + tree.width * 0.4, 0 + tree.height * 0.7, tree.width * 0.1, tree.height * 0.3));
     tree.colliders[0].enabled = true;
+    // tree.colliders[0].visible = true;
     trees.push(tree);
 }
 
@@ -58,11 +59,11 @@ for (let i = 0; i < 1000; i++) {
 }
 
 function addEnemy() {
-    let width = 40;
-    let height = 50;
+    let width = 100;
+    let height = 80;
     let x = getRandomInRange(0, worldWidth - 100);
     let y = getRandomInRange(0, worldHeight - 100);
-    let entity = new Entity(x, y, width, height, './mouse.png', canv);
+    let entity = new Entity(x, y, width, height, './cat.png', canv);
     entity.addCollider(new CircleCollider(entity.width / 2, entity.height / 2, entity.height / 2));
     entity.addCollider(new BoxCollider(0, 0, entity.width, entity.height));
     entity.colliders[0].enabled = true;
@@ -108,7 +109,6 @@ function animate() {
             for (let j = 0; j < trees.length; j++) {
                 if (CollisionManager.checkCollision(sprites[i].colliders[0], trees[j].colliders[0])) {
                     sprites[i].dx *= -1;
-                    sprites[i].dy *= -1;
                 }
             }
 
@@ -126,9 +126,35 @@ function animate() {
         if (camera.isInView(trees[i])) {
             trees[i].update(delta);
             trees[i].draw(ctx);
+
+            if (CollisionManager.checkCollision(mouse.colliders[0], trees[i].colliders[0])) {
+
+                const mouseCollider = mouse.colliders[0];
+                const treeCollider = trees[i].colliders[0];
+
+                const dx = (mouseCollider.x + mouseCollider.width / 2) - (treeCollider.x + treeCollider.width / 2);
+                const dy = (mouseCollider.y + mouseCollider.height / 2) - (treeCollider.y + treeCollider.height / 2);
+
+                const absDx = Math.abs(dx);
+                const absDy = Math.abs(dy);
+
+                if (absDx > absDy) {
+                    if (dx > 0) {
+                        mouse.x = treeCollider.x + treeCollider.width - mouseCollider.offsetX;
+                    } else {
+                        mouse.x = treeCollider.x - mouseCollider.width - mouseCollider.offsetX;
+                    }
+                } else {
+                    if (dy > 0) {
+                        mouse.y = treeCollider.y + treeCollider.height - mouseCollider.offsetY;
+                    } else {
+                        mouse.y = treeCollider.y - mouseCollider.height - mouseCollider.offsetY;
+                    }
+                }
+            }
         }
     }
     // camera.reset(ctx);
     animateId = window.requestAnimationFrame(animate);
 }
-animate()            
+animate();
