@@ -8,7 +8,6 @@ export class Player extends Entity {
         this.inputManager = new InputManager();
     }
     update(delta) {
-
         if (this.inputManager.isKeyPressed('KeyW')) {
             this.y -= this.speed * delta;
         }

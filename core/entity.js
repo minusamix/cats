@@ -5,10 +5,11 @@ export class Entity {
         this.y = y;
         this.width = width;
         this.height = height;
-        this.sprite = new Sprite(imageSrc, width, height);
+        this.imageSrc = imageSrc;
+        this.sprite = new Sprite(this.imageSrc, width, height);
         this.colliders = [];
-        this.dx = 5;
-        this.dy = 5;
+        this.dx = 0;
+        this.dy = 0;
         this.visible = true;
         this.canvas = canvas;
     }
