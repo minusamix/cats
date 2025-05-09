@@ -6,22 +6,42 @@ export class Player extends Entity {
         super(x, y, width, height, imageSrc, canvas);
         this.speed = 100;
         this.inputManager = new InputManager();
+        this.attack = false;
     }
     update(delta) {
+        let moved = false;
+
         if (this.inputManager.isKeyPressed('KeyW')) {
             this.y -= this.speed * delta;
+            moved = true;
         }
         if (this.inputManager.isKeyPressed('KeyD')) {
             this.x += this.speed * delta;
+            this.sprite.direction = 1;
+            moved = true;
         }
         if (this.inputManager.isKeyPressed('KeyS')) {
             this.y += this.speed * delta;
+            moved = true;
         }
         if (this.inputManager.isKeyPressed('KeyA')) {
             this.x -= this.speed * delta;
+            this.sprite.direction = -1;
+            moved = true;
         }
+        if (this.inputManager.isKeyPressed('Space')) {
+            this.attack = true;
+        } else {
+            this.attack = false;
+        }
+        this.sprite.frameY = moved ? this.height : 0;
+        this.sprite.frameY = this.attack ? this.height * 2 : this.sprite.frameY;
+
+
         this.sprite.update(delta);
         this.colliders.forEach(collider => collider.update(this.x, this.y));
+
+
     }
 
 }

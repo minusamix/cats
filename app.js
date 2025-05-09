@@ -28,22 +28,30 @@ function getRandomInRange(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-const mouse = new Player(worldWidth / 2, worldHeight / 2, 30, 40, './mouse.png', canv);
-mouse.addCollider(new BoxCollider(0, 0, mouse.width, mouse.height));
-mouse.colliders[0].enabled = true;
-// mouse.colliders[0].visible = true;
+const player = new Player(worldWidth / 2, worldHeight / 2, 192, 192, './src/img/Warrior_Blue.png', canv);
+player.sprite = new Sprite('./src/img/Warrior_Blue.png', player.width, player.height, 6, 0.1, player.width * 0.75, player.height * 0.75);
+player.addCollider(new BoxCollider(0 + player.width * 0.25, 0 + player.height * 0.25, player.width * 0.25, player.height * 0.25));
+player.colliders[0].enabled = true;
+// player.colliders[0].visible = true;
 
 let terrains = [];
 let trees = [];
 let sprites = [];
 
-for (let i = 0; i < worldWidth / 250; i++) {
-    for (let j = 0; j < worldHeight / 250; j++) {
-        terrains.push(new Entity(i * 250, j * 250, 250, 250, './grass.png', canv));
+for (let i = 0; i < worldWidth / 64; i++) {
+    for (let j = 0; j < worldHeight / 64; j++) {
+        const imgSrc = './src/img/Tilemap_Flat.png';
+        const width = 64;
+        const height = 64;
+        const terrain = new Entity(i * width, j * height, width, height, imgSrc)
+
+        terrain.sprite = new Sprite(imgSrc, 64, 64, 1, 0.1, 64, 64);
+        terrain.sprite.frameY = 64;
+        terrains.push(terrain);
     }
 }
 for (let i = 0; i < 300; i++) {
-    let img = './tree.png';
+    let img = './src/img/tree.png';
     let width = 192;
     let height = 192;
     let x = getRandomInRange(0, worldWidth - width);
@@ -63,14 +71,15 @@ for (let i = 0; i < 200; i++) {
 }
 
 function addEnemy() {
-    let width = 64;
-    let height = 64;
-    let imageSrc = './monster.png';
-    let x = getRandomInRange(0, worldWidth - 100);
-    let y = getRandomInRange(0, worldHeight - 100);
+    let width = 192;
+    let height = 192;
+    let imageSrc = './src/img/Torch_Yellow.png';
+    let x = getRandomInRange(0 + width, worldWidth - width);
+    let y = getRandomInRange(0 + height, worldHeight - height);
     let entity = new Entity(x, y, width, height, imageSrc, canv);
     entity.sprite = new Sprite(imageSrc, width, height, 6, 0.1, width, height);
-    entity.addCollider(new CircleCollider(entity.width / 2, entity.height / 2, entity.height / 2));
+    entity.sprite.frameY = height;
+    entity.addCollider(new CircleCollider(entity.width / 2, entity.height / 2, entity.height / 6));
     entity.addCollider(new BoxCollider(0, 0, entity.width, entity.height));
     entity.colliders[0].enabled = true;
     // entity.colliders[0].visible = true;
@@ -79,7 +88,7 @@ function addEnemy() {
     sprites.push(entity);
 }
 
-const camera = new Camera(mouse, canv, worldWidth, worldHeight);
+const camera = new Camera(player, canv, worldWidth, worldHeight);
 
 let time = Date.now();
 
@@ -102,7 +111,7 @@ function animate() {
         if (camera.isInView(sprites[i])) {
             sprites[i].update(delta);
             sprites[i].draw(ctx);
-            if (CollisionManager.checkCollision(mouse.colliders[0], sprites[i].colliders[0])) sprites.splice([i], 1);
+            if (CollisionManager.checkCollision(player.colliders[0], sprites[i].colliders[0])) sprites.splice([i], 1);
             if (sprites[i].x + sprites[i].width > worldWidth || sprites[i].x < 0 || sprites[i].y + sprites[i].height > worldHeight || sprites[i].y < 0) sprites[i].dx *= -1;
             if (sprites[i].y > worldHeight - sprites[i].height || sprites[i].y < 0) sprites[i].dy *= -1;
             for (let j = i + 1; j < sprites.length; j++) {
@@ -123,14 +132,14 @@ function animate() {
         }
     }
 
-    mouse.update(delta);
-    mouse.draw(ctx);
-    if (mouse.x > worldWidth - mouse.width) mouse.dx = worldWidth - mouse.width;
-    if (mouse.x < 0) mouse.x = 0;
-    if (mouse.y < 0) mouse.y = 0;
-    if (mouse.x + mouse.width > worldWidth) mouse.x = worldWidth - mouse.width;
-    if (mouse.y + mouse.height > worldHeight) mouse.y = worldHeight - mouse.height;
-    if (mouse.y > worldHeight - mouse.height) mouse.dy = worldHeight - mouse.height;
+    player.update(delta);
+    player.draw(ctx);
+    if (player.x > worldWidth - player.width) player.dx = worldWidth - player.width;
+    if (player.x < 0) player.x = 0;
+    if (player.y < 0) player.y = 0;
+    if (player.x + player.width > worldWidth) player.x = worldWidth - player.width;
+    if (player.y + player.height > worldHeight) player.y = worldHeight - player.height;
+    if (player.y > worldHeight - player.height) player.dy = worldHeight - player.height;
 
 
     for (let i = 0; i < trees.length; i++) {
@@ -138,38 +147,38 @@ function animate() {
             trees[i].update(delta);
             trees[i].draw(ctx);
 
-            if (CollisionManager.checkCollision(mouse.colliders[0], trees[i].colliders[0])) {
-                // mouse.draw(ctx);
-                const mouseCollider = mouse.colliders[0];
+            if (CollisionManager.checkCollision(player.colliders[0], trees[i].colliders[0])) {
+                // player.draw(ctx);
+                const playerCollider = player.colliders[0];
                 const treeCollider = trees[i].colliders[0];
 
                 const overlapX = Math.min(
-                    mouseCollider.x + mouseCollider.width - treeCollider.x,
-                    treeCollider.x + treeCollider.width - mouseCollider.x
+                    playerCollider.x + playerCollider.width - treeCollider.x,
+                    treeCollider.x + treeCollider.width - playerCollider.x
                 );
 
                 const overlapY = Math.min(
-                    mouseCollider.y + mouseCollider.height - treeCollider.y,
-                    treeCollider.y + treeCollider.height - mouseCollider.y
+                    playerCollider.y + playerCollider.height - treeCollider.y,
+                    treeCollider.y + treeCollider.height - playerCollider.y
                 );
 
                 if (overlapX < overlapY) {
-                    if (mouseCollider.x < treeCollider.x) {
-                        mouse.x = treeCollider.x - mouseCollider.width - mouseCollider.offsetX;
+                    if (playerCollider.x < treeCollider.x) {
+                        player.x = treeCollider.x - playerCollider.width - playerCollider.offsetX;
                     } else {
-                        mouse.x = treeCollider.x + treeCollider.width - mouseCollider.offsetX;
+                        player.x = treeCollider.x + treeCollider.width - playerCollider.offsetX;
                     }
                 } else {
-                    if (mouseCollider.y < treeCollider.y) {
-                        mouse.y = treeCollider.y - mouseCollider.height - mouseCollider.offsetY;
+                    if (playerCollider.y < treeCollider.y) {
+                        player.y = treeCollider.y - playerCollider.height - playerCollider.offsetY;
                     } else {
-                        mouse.y = treeCollider.y + treeCollider.height - mouseCollider.offsetY;
+                        player.y = treeCollider.y + treeCollider.height - playerCollider.offsetY;
                     }
                 }
 
 
-                // const dx = mouse.colliders[0].x - trees[i].colliders[0].x;
-                // const dy = mouse.colliders[0].y - trees[i].colliders[0].y;
+                // const dx = player.colliders[0].x - trees[i].colliders[0].x;
+                // const dy = player.colliders[0].y - trees[i].colliders[0].y;
 
                 // let horizontalRadius = trees[i].colliders[0].width;
                 // const verticalRadius = trees[i].colliders[0].height;
@@ -185,32 +194,32 @@ function animate() {
                 //     const pushX = horizontalRadius * Math.cos(angle);
                 //     const pushY = verticalRadius * Math.sin(angle);
 
-                //     mouse.x = trees[i].colliders[0].x + pushX;
-                //     mouse.y = trees[i].colliders[0].y + pushY;
+                //     player.x = trees[i].colliders[0].x + pushX;
+                //     player.y = trees[i].colliders[0].y + pushY;
                 // }
 
 
 
-                // const mouseCollider = mouse.colliders[0];
+                // const playerCollider = player.colliders[0];
                 // const treeCollider = trees[i].colliders[0];
 
-                // const dx = (mouseCollider.x + mouseCollider.width / 2) - (treeCollider.x + treeCollider.width / 2);
-                // const dy = (mouseCollider.y + mouseCollider.height / 2) - (treeCollider.y + treeCollider.height / 2);
+                // const dx = (playerCollider.x + playerCollider.width / 2) - (treeCollider.x + treeCollider.width / 2);
+                // const dy = (playerCollider.y + playerCollider.height / 2) - (treeCollider.y + treeCollider.height / 2);
 
                 // const absDx = Math.abs(dx);
                 // const absDy = Math.abs(dy);
 
                 // if (absDx > absDy) {
                 //     if (dx > 0) {
-                //         mouse.x = treeCollider.x + treeCollider.width - mouseCollider.offsetX;
+                //         player.x = treeCollider.x + treeCollider.width - playerCollider.offsetX;
                 //     } else {
-                //         mouse.x = treeCollider.x - mouseCollider.width - mouseCollider.offsetX;
+                //         player.x = treeCollider.x - playerCollider.width - playerCollider.offsetX;
                 //     }
                 // } else {
                 //     if (dy > 0) {
-                //         mouse.y = treeCollider.y + treeCollider.height - mouseCollider.offsetY;
+                //         player.y = treeCollider.y + treeCollider.height - playerCollider.offsetY;
                 //     } else {
-                //         mouse.y = treeCollider.y - mouseCollider.height - mouseCollider.offsetY;
+                //         player.y = treeCollider.y - playerCollider.height - playerCollider.offsetY;
                 //     }
                 // }
             }

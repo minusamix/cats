@@ -10,6 +10,8 @@ export class Sprite {
         this.frameTimer = 0;
         this.drawWidth = drawWidth || frameWidth;
         this.drawHeight = drawHeight || frameHeight;
+        this.direction = 1; // 1 - вправо, -1 - влево
+        this.frameY = 0;
     }
 
     update(delta) {
@@ -23,14 +25,29 @@ export class Sprite {
     }
 
     draw(ctx, x, y) {
+        ctx.save(); // сохраняем текущее состояние контекста
+
+        if (this.direction === -1) {
+            // Если направление влево, отражаем изображение по горизонтали
+            ctx.translate(x + this.drawWidth, 0);
+            ctx.scale(-1, 1);
+            x = 0;
+        }
+
         if (this.frameCount > 1) {
             ctx.drawImage(
                 this.image,
-                this.currentFrame * this.frameWidth, 0, this.frameWidth, this.frameHeight,
+                this.currentFrame * this.frameWidth, this.frameY, this.frameWidth, this.frameHeight,
                 x, y, this.drawWidth, this.drawHeight
             );
         } else {
-            ctx.drawImage(this.image, x, y, this.drawWidth, this.drawHeight);
+            ctx.drawImage(
+                this.image,
+                this.frameWidth, this.frameY, this.frameWidth, this.frameHeight,
+                x, y, this.drawWidth, this.drawHeight
+            );
         }
+
+        ctx.restore(); // восстанавливаем состояние контекста
     }
 }
