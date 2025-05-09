@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cats</title>
+    <title>Goblins</title>
     <style>
         * {
             margin: 0;
@@ -15,12 +15,34 @@
         html {
             overflow: hidden;
         }
+
+        .ui {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            font-size: 26px;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+        }
+
+        .btn {
+            padding: 6px;
+        }
     </style>
 </head>
 
 <body>
     <canvas id="canvas"></canvas>
     <script src="./app.js" type="module"></script>
+    <div class="ui">
+        <button class="btn">w</button>
+        <button class="btn">s</button>
+        <button class="btn">a</button>
+        <button class="btn">d</button>
+        <button class="btn">space</button>
+    </div>
 </body>
 
 </html>

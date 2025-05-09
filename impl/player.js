@@ -31,7 +31,9 @@ export class Player extends Entity {
         }
         if (this.inputManager.isKeyPressed('Space')) {
             this.attack = true;
+            this.speed = 0;
         } else {
+            this.speed = 100;
             this.attack = false;
         }
         this.sprite.frameY = moved ? this.height : 0;

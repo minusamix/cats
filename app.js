@@ -44,7 +44,6 @@ for (let i = 0; i < worldWidth / 64; i++) {
         const width = 64;
         const height = 64;
         const terrain = new Entity(i * width, j * height, width, height, imgSrc)
-
         terrain.sprite = new Sprite(imgSrc, 64, 64, 1, 0.1, 64, 64);
         terrain.sprite.frameY = 64;
         terrains.push(terrain);
@@ -111,7 +110,9 @@ function animate() {
         if (camera.isInView(sprites[i])) {
             sprites[i].update(delta);
             sprites[i].draw(ctx);
-            if (CollisionManager.checkCollision(player.colliders[0], sprites[i].colliders[0])) sprites.splice([i], 1);
+            if (CollisionManager.checkCollision(player.colliders[0], sprites[i].colliders[0])) {
+                if (player.attack && player.sprite.currentFrame > 4) sprites.splice([i], 1);
+            };
             if (sprites[i].x + sprites[i].width > worldWidth || sprites[i].x < 0 || sprites[i].y + sprites[i].height > worldHeight || sprites[i].y < 0) sprites[i].dx *= -1;
             if (sprites[i].y > worldHeight - sprites[i].height || sprites[i].y < 0) sprites[i].dy *= -1;
             for (let j = i + 1; j < sprites.length; j++) {
