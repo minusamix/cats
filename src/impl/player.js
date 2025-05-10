@@ -29,7 +29,7 @@ export class Player extends Entity {
             this.sprite.direction = -1;
             moved = true;
         }
-        if (this.inputManager.isKeyPressed('Space')) {
+        if (this.inputManager.isKeyPressed('Space') || this.inputManager.mouse.left) {
             this.attack = true;
             this.speed = 0;
             this.sprite.frameSpeed = 0.05;
