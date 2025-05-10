@@ -5,7 +5,7 @@ export class InputManager {
 
         window.addEventListener('keydown', e => this.keys[e.code] = true);
         window.addEventListener('keyup', e => this.keys[e.code] = false);
-
+        window.addEventListener('contextmenu', e => e.preventDefault());
         window.addEventListener('mousemove', e => {
             this.mouse.x = e.clientX;
             this.mouse.y = e.clientY;

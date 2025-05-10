@@ -53,11 +53,10 @@ html {
 }
 
 
-@media (width<576px) {
-
+@media (width<645px) {
     .btn:last-child {
         position: absolute;
         bottom: 10px;
-        left: 45vw;
+        left: 50vw;
     }
 }

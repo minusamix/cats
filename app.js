@@ -163,29 +163,26 @@ function animate() {
         if (camera.isInView(sprites[i])) {
             sprites[i].update(delta);
             sprites[i].draw(ctx);
-
             if (CollisionManager.checkCollision(player.colliders[0], sprites[i].colliders[0])) {
                 sprites[i].attack = true;
                 if (player.attack && player.sprite.currentFrame > 4) sprites.splice([i], 1);
             } else {
                 sprites[i].attack = false;
             }
-            for (let j = i + 1; j < sprites.length; j++) {
-                if (CollisionManager.checkCollision(sprites[i].colliders[0], sprites[j].colliders[0])) {
-                    sprites[i].dx *= -1;
-                    sprites[j].dx *= -1;
-                    sprites[i].dy *= -1;
-                    sprites[j].dy *= -1;
-                }
+        }
+        for (let j = i + 1; j < sprites.length; j++) {
+            if (CollisionManager.checkCollision(sprites[i].colliders[0], sprites[j].colliders[0])) {
+                sprites[i].dx *= -1;
+                sprites[j].dx *= -1;
+                sprites[i].dy *= -1;
+                sprites[j].dy *= -1;
             }
-            for (let j = 0; j < trees.length; j++) {
-                if (CollisionManager.checkCollision(sprites[i].colliders[0], trees[j].colliders[0])) {
-                    sprites[i].dx *= -1;
-                    // sprites[i].dy *= -1;
-                }
+        }
+        for (let j = 0; j < trees.length; j++) {
+            if (CollisionManager.checkCollision(sprites[i].colliders[0], trees[j].colliders[0])) {
+                sprites[i].dx *= -1;
+                // sprites[i].dy *= -1;
             }
-
-
         }
     }
 
@@ -232,52 +229,6 @@ function animate() {
                     }
                 }
 
-
-                // const dx = player.colliders[0].x - trees[i].colliders[0].x;
-                // const dy = player.colliders[0].y - trees[i].colliders[0].y;
-
-                // let horizontalRadius = trees[i].colliders[0].width;
-                // const verticalRadius = trees[i].colliders[0].height;
-
-                // if (dx > 0) {
-                //     horizontalRadius *= 1;
-                // }
-
-                // const normalizedDistance = Math.pow(dx / horizontalRadius, 2) + Math.pow(dy / verticalRadius, 2);
-
-                // if (normalizedDistance < 1) {
-                //     const angle = Math.atan2(dy / verticalRadius, dx / horizontalRadius);
-                //     const pushX = horizontalRadius * Math.cos(angle);
-                //     const pushY = verticalRadius * Math.sin(angle);
-
-                //     player.x = trees[i].colliders[0].x + pushX;
-                //     player.y = trees[i].colliders[0].y + pushY;
-                // }
-
-
-
-                // const playerCollider = player.colliders[0];
-                // const treeCollider = trees[i].colliders[0];
-
-                // const dx = (playerCollider.x + playerCollider.width / 2) - (treeCollider.x + treeCollider.width / 2);
-                // const dy = (playerCollider.y + playerCollider.height / 2) - (treeCollider.y + treeCollider.height / 2);
-
-                // const absDx = Math.abs(dx);
-                // const absDy = Math.abs(dy);
-
-                // if (absDx > absDy) {
-                //     if (dx > 0) {
-                //         player.x = treeCollider.x + treeCollider.width - playerCollider.offsetX;
-                //     } else {
-                //         player.x = treeCollider.x - playerCollider.width - playerCollider.offsetX;
-                //     }
-                // } else {
-                //     if (dy > 0) {
-                //         player.y = treeCollider.y + treeCollider.height - playerCollider.offsetY;
-                //     } else {
-                //         player.y = treeCollider.y - playerCollider.height - playerCollider.offsetY;
-                //     }
-                // }
             }
         }
     }
