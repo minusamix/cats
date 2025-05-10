@@ -44,7 +44,7 @@ export class Sprite {
         } else {
             ctx.drawImage(
                 this.image,
-                this.frameWidth, this.frameY, this.frameWidth, this.frameHeight,
+                this.frameWidth * this.currentFrame, this.frameY, this.frameWidth, this.frameHeight,
                 x, y, this.drawWidth, this.drawHeight
             );
         }
