@@ -13,11 +13,10 @@ html {
     right: 0;
     bottom: 0;
     font-size: 26px;
-    padding: 20px;
+    padding: 6px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(2, 1fr);
-    gap: 5px;
 }
 
 .btn {
