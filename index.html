@@ -23,12 +23,25 @@
             font-size: 26px;
             padding: 20px;
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            grid-template-rows: repeat(2, 1fr);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2px;
         }
 
         .btn {
-            padding: 6px;
+            width: 50px;
+            padding: 4px;
+        }
+
+        .btn:first-child,
+        .btn:nth-child(4),
+        .btn:last-child {
+            width: 100%;
+        }
+
+        .btn:nth-child(2),
+        .btn:nth-child(3) {
+            width: 49%;
         }
     </style>
 </head>
@@ -38,9 +51,9 @@
     <script src="./app.js" type="module"></script>
     <div class="ui">
         <button class="btn">w</button>
-        <button class="btn">s</button>
         <button class="btn">a</button>
         <button class="btn">d</button>
+        <button class="btn">s</button>
         <button class="btn">space</button>
     </div>
 </body>

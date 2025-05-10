@@ -8,8 +8,8 @@ export class Entity {
         this.imageSrc = imageSrc;
         this.sprite = new Sprite(this.imageSrc, width, height);
         this.colliders = [];
-        this.dx = 0;
-        this.dy = 0;
+        this.dx = 5;
+        this.dy = 5;
         this.visible = true;
         this.canvas = canvas;
     }
@@ -19,9 +19,9 @@ export class Entity {
     }
 
     update(delta) {
-        this.sprite.update(delta);
         this.x += this.dx * delta;
         this.y += this.dy * delta;
+        this.sprite.update(delta);
         this.colliders.forEach(collider => collider.update(this.x, this.y));
     }
 
