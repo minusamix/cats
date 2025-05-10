@@ -9,6 +9,10 @@ import { Tree } from './impl/tree.js';
 import { Goblin } from './impl/goblin.js';
 import { Terrain } from './impl/terrain.js';
 
+function getRandomInRange(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 let animateId = 0;
 const canv = document.getElementById('canvas');
 const ctx = canv.getContext('2d');
@@ -18,14 +22,11 @@ let terrains = [];
 let trees = [];
 let sprites = [];
 const world = {
-    width: window.innerWidth * 3,
-    height: window.innerHeight * 3,
+    width: 5760,
+    height: 2859,
 }
+let ui = document.querySelector('.ui');
 
-
-function getRandomInRange(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
 
 const player = new Player(world.width / 2, world.height / 2, 192, 192, './src/img/Warrior_Blue.png', canv);
 player.sprite = new Sprite('./src/img/Warrior_Blue.png', player.width, player.height, 6, 0.1, player.width * 0.75, player.height * 0.75);
@@ -34,6 +35,18 @@ player.colliders[0].enabled = true;
 // player.colliders[0].visible = true;
 const camera = new Camera(player, canv, world.width, world.height);
 
+ui.addEventListener('touchstart', (e) => {
+    const target = e.target;
+    if (target.classList.contains('btn')) {
+        player.inputManager.keys[target.dataset.btn] = true;
+    } else {
+        player.inputManager.keys[target.dataset.btn] = false;
+    }
+})
+ui.addEventListener('touchend', (e) => {
+    const target = e.target;
+    player.inputManager.keys[target.dataset.btn] = false;
+})
 for (let i = 0; i < world.width / 64; i++) {
     for (let j = 0; j < world.height / 64; j++) {
         const imgSrc = './src/img/Tilemap_Flat.png';

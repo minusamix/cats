@@ -14,6 +14,7 @@ export class Player extends Entity {
         if (this.inputManager.isKeyPressed('KeyW')) {
             this.y -= this.speed * delta;
             moved = true;
+            console.log(this.inputManager.keys);
         }
         if (this.inputManager.isKeyPressed('KeyD')) {
             this.x += this.speed * delta;
