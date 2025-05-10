@@ -49,13 +49,14 @@ ui.addEventListener('touchend', (e) => {
 })
 for (let i = 0; i < world.width / 64; i++) {
     for (let j = 0; j < world.height / 64; j++) {
-        const imgSrc = './src/img/terrain.png';
+        const imgSrc = './src/img/Tilemap_Flat.png';
         const width = 64;
         const height = 64;
         const terrain = new Terrain(i * width, j * height, width, height, imgSrc)
-        terrain.sprite = new Sprite(imgSrc, width, height, 1, 500, width, height);
+        terrain.sprite = new Sprite(imgSrc, 64, 64, 1, 500, 64, 64);
+        terrain.sprite.frameY = height;
+        terrain.sprite.currentFrame = 1;
         terrains.push(terrain);
-
     }
 }
 
@@ -74,7 +75,7 @@ for (let i = 0; i < 100; i++) {
     bushes.push(bush);
 }
 
-for (let i = 0; i < 200; i++) {
+for (let i = 0; i < 100; i++) {
     let img = './src/img/tree.png';
     let width = 192;
     let height = 192;
@@ -88,7 +89,7 @@ for (let i = 0; i < 200; i++) {
     trees.push(tree);
 }
 
-for (let i = 0; i < 200; i++) {
+for (let i = 0; i < 100; i++) {
     addEnemy();
 }
 
