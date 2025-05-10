@@ -59,7 +59,7 @@ for (let i = 0; i < 300; i++) {
     trees.push(tree);
 }
 
-for (let i = 0; i < 200; i++) {
+for (let i = 0; i < 300; i++) {
     addEnemy();
 }
 
@@ -94,6 +94,8 @@ function animate() {
     }
 
     for (let i = 0; i < sprites.length; i++) {
+        if (sprites[i].x + sprites[i].width > world.width || sprites[i].x < 0 || sprites[i].y + sprites[i].height > world.height || sprites[i].y < 0) sprites[i].dx *= -1;
+        if (sprites[i].y > world.height - sprites[i].height || sprites[i].y < 0) sprites[i].dy *= -1;
         if (camera.isInView(sprites[i])) {
             sprites[i].update(delta);
             sprites[i].draw(ctx);
@@ -101,8 +103,7 @@ function animate() {
                 sprites[i].attack = true;
                 if (player.attack && player.sprite.currentFrame > 4) sprites.splice([i], 1);
             };
-            if (sprites[i].x + sprites[i].width > world.width || sprites[i].x < 0 || sprites[i].y + sprites[i].height > world.height || sprites[i].y < 0) sprites[i].dx *= -1;
-            if (sprites[i].y > world.height - sprites[i].height || sprites[i].y < 0) sprites[i].dy *= -1;
+
             for (let j = i + 1; j < sprites.length; j++) {
                 if (CollisionManager.checkCollision(sprites[i].colliders[0], sprites[j].colliders[0])) {
                     sprites[i].dx *= -1;
