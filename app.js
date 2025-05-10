@@ -8,7 +8,7 @@ import { Player } from './impl/player.js';
 import { Tree } from './impl/tree.js';
 import { Goblin } from './impl/goblin.js';
 import { Terrain } from './impl/terrain.js';
-
+import { Entity } from './core/entity.js';
 function getRandomInRange(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -112,11 +112,13 @@ function animate() {
         if (camera.isInView(sprites[i])) {
             sprites[i].update(delta);
             sprites[i].draw(ctx);
+
             if (CollisionManager.checkCollision(player.colliders[0], sprites[i].colliders[0])) {
                 sprites[i].attack = true;
                 if (player.attack && player.sprite.currentFrame > 4) sprites.splice([i], 1);
-            };
-
+            } else {
+                sprites[i].attack = false;
+            }
             for (let j = i + 1; j < sprites.length; j++) {
                 if (CollisionManager.checkCollision(sprites[i].colliders[0], sprites[j].colliders[0])) {
                     sprites[i].dx *= -1;
@@ -128,6 +130,7 @@ function animate() {
             for (let j = 0; j < trees.length; j++) {
                 if (CollisionManager.checkCollision(sprites[i].colliders[0], trees[j].colliders[0])) {
                     sprites[i].dx *= -1;
+                    // sprites[i].dy *= -1;
                 }
             }
 
