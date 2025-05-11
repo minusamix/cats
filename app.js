@@ -102,9 +102,9 @@ function addEnemy() {
     let entity = new Goblin(x, y, width, height, imageSrc, canv);
     entity.sprite = new Sprite(imageSrc, width, height, 6, 0.1, width, height);
     entity.addCollider(new CircleCollider(entity.width / 2, entity.height / 2, entity.height / 6));
-    entity.addCollider(new CircleCollider(entity.width / 2, entity.height / 2, entity.height));
+    entity.addCollider(new CircleCollider(entity.width / 2, entity.height / 2, entity.height / 2));
     entity.colliders[0].enabled = true;
-    // entity.colliders[0].visible = true;
+    // entity.colliders[1].visible = true;
     entity.colliders[1].enabled = true;
     sprites.push(entity);
 }
