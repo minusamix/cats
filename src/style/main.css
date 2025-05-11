@@ -16,15 +16,16 @@ html {
     position: absolute;
     left: 0;
     bottom: 0;
-    font-size: 26px;
     padding: 6px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(4, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    border-radius: 50%;
+    background-color: #7be9f765;
 }
 
 .btn {
-    background-color: rgba(199, 199, 199, 0.678);
+    background-color: inherit;
     width: auto;
     padding: 4px;
     border-radius: 50%;
@@ -36,7 +37,9 @@ html {
     -khtml-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
-    user-select: none;/
+    user-select: none;
+    font-size: 18px;
+
 }
 
 .btn:nth-child(1) {
@@ -45,18 +48,15 @@ html {
 
 .btn:last-child,
 .btn:nth-child(3) {
-    grid-column: 3/4;
+    grid-column: 3/3;
 }
 
 .btn:nth-child(4) {
     grid-column: 2/4;
 }
 
-
-@media (width<645px) {
-    .btn:last-child {
-        position: absolute;
-        bottom: 10px;
-        left: 50vw;
-    }
+.btn:last-child {
+    position: absolute;
+    bottom: 0;
+    left: 90vw;
 }

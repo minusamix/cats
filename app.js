@@ -30,7 +30,7 @@ let ui = document.querySelector('.ui');
 
 const player = new Player(world.width / 2, world.height / 2, 192, 192, './src/img/Warrior_Blue.png', canv);
 player.sprite = new Sprite('./src/img/Warrior_Blue.png', player.width, player.height, 6, 0.1, player.width * 0.75, player.height * 0.75);
-player.addCollider(new BoxCollider(0 + player.width * 0.25, 0 + player.height * 0.25, player.width * 0.25, player.height * 0.25));
+player.addCollider(new BoxCollider(0 + player.width * 0.25, 0 + player.height * 0.2, player.width * 0.25, player.height * 0.3));
 player.colliders[0].enabled = true;
 // player.colliders[0].visible = true;
 const camera = new Camera(player, canv, world.width, world.height);
@@ -38,7 +38,7 @@ const camera = new Camera(player, canv, world.width, world.height);
 ui.addEventListener('touchstart', (e) => {
     const target = e.target;
     if (target.classList.contains('btn')) {
-        player.inputManager.keys[target.dataset.btn] = true;
+        if (target.dataset.btn) player.inputManager.keys[target.dataset.btn] = true;
     } else {
         player.inputManager.keys[target.dataset.btn] = false;
     }
@@ -75,7 +75,7 @@ for (let i = 0; i < 100; i++) {
     bushes.push(bush);
 }
 
-for (let i = 0; i < 100; i++) {
+for (let i = 0; i < 200; i++) {
     let img = './src/img/tree.png';
     let width = 192;
     let height = 192;
@@ -89,7 +89,7 @@ for (let i = 0; i < 100; i++) {
     trees.push(tree);
 }
 
-for (let i = 0; i < 100; i++) {
+for (let i = 0; i < 200; i++) {
     addEnemy();
 }
 
@@ -101,11 +101,11 @@ function addEnemy() {
     let y = getRandomInRange(0 + height, world.height - height);
     let entity = new Goblin(x, y, width, height, imageSrc, canv);
     entity.sprite = new Sprite(imageSrc, width, height, 6, 0.1, width, height);
-    entity.sprite.frameY = height;
-    entity.addCollider(new CircleCollider(entity.width / 2, entity.height / 2, entity.height / 10));
-    entity.addCollider(new BoxCollider(0, 0, entity.width, entity.height));
+    entity.addCollider(new CircleCollider(entity.width / 2, entity.height / 2, entity.height / 6));
+    entity.addCollider(new CircleCollider(entity.width / 2, entity.height / 2, entity.height));
     entity.colliders[0].enabled = true;
     // entity.colliders[0].visible = true;
+    entity.colliders[1].enabled = true;
     sprites.push(entity);
 }
 let time = Date.now();
@@ -158,42 +158,49 @@ function animate() {
         }
     }
     for (let i = 0; i < sprites.length; i++) {
-        if (sprites[i].x + sprites[i].width > world.width || sprites[i].x < 0 || sprites[i].y + sprites[i].height > world.height || sprites[i].y < 0) sprites[i].dx *= -1;
-        if (sprites[i].y > world.height - sprites[i].height || sprites[i].y < 0) sprites[i].dy *= -1;
+
         if (camera.isInView(sprites[i])) {
+            for (let j = 0; j < trees.length; j++) {
+                if (CollisionManager.checkCollision(sprites[i].colliders[0], trees[j].colliders[0])) {
+                    sprites[i].dx *= -1;
+                    // sprites[i].dy *= -1;
+                }
+            }
+            if (sprites[i].x + sprites[i].width > world.width || sprites[i].x < 0 || sprites[i].y + sprites[i].height > world.height || sprites[i].y < 0) sprites[i].dx *= -1;
+            if (sprites[i].y > world.height - sprites[i].height || sprites[i].y < 0) sprites[i].dy *= -1;
             sprites[i].update(delta);
             sprites[i].draw(ctx);
             if (CollisionManager.checkCollision(player.colliders[0], sprites[i].colliders[0])) {
                 sprites[i].attack = true;
-                if (player.attack && player.sprite.currentFrame > 4) sprites.splice([i], 1);
+                if (player.attack && player.sprite.currentFrame > 4) sprites.splice(i, 1);
             } else {
                 sprites[i].attack = false;
             }
+            if (CollisionManager.checkCollision(player.colliders[0], sprites[i].colliders[1])) {
+                sprites[i].setTarget(player);
+            } else {
+                sprites[i].setTarget(null);
+            }
         }
+
         for (let j = i + 1; j < sprites.length; j++) {
-            if (CollisionManager.checkCollision(sprites[i].colliders[0], sprites[j].colliders[0])) {
-                sprites[i].dx *= -1;
-                sprites[j].dx *= -1;
-                sprites[i].dy *= -1;
-                sprites[j].dy *= -1;
+            if (camera.isInView(sprites[i]) && camera.isInView(sprites[j])) {
+                if (CollisionManager.checkCollision(sprites[i].colliders[0], sprites[j].colliders[0])) {
+                    sprites[i].dx *= -1;
+                    sprites[j].dx *= -1;
+                    sprites[i].dy *= -1;
+                    sprites[j].dy *= -1;
+                }
             }
+
         }
-        for (let j = 0; j < trees.length; j++) {
-            if (CollisionManager.checkCollision(sprites[i].colliders[0], trees[j].colliders[0])) {
-                sprites[i].dx *= -1;
-                // sprites[i].dy *= -1;
-            }
-        }
+
     }
 
     player.update(delta);
     player.draw(ctx);
-    if (player.x > world.width - player.width) player.dx = world.width - player.width;
-    if (player.x < 0) player.x = 0;
-    if (player.y < 0) player.y = 0;
-    if (player.x + player.width > world.width) player.x = world.width - player.width;
-    if (player.y + player.height > world.height) player.y = world.height - player.height;
-    if (player.y > world.height - player.height) player.dy = world.height - player.height;
+    player.x = Math.max(0, Math.min(player.x, world.width - player.width));
+    player.y = Math.max(0, Math.min(player.y, world.height - player.height));
 
     for (let i = 0; i < trees.length; i++) {
         if (camera.isInView(trees[i])) {
@@ -205,10 +212,10 @@ function animate() {
                 const playerCollider = player.colliders[0];
                 const treeCollider = trees[i].colliders[0];
 
-                const overlapX = Math.min(
+                const overlapX = Math.max(0, Math.min(
                     playerCollider.x + playerCollider.width - treeCollider.x,
                     treeCollider.x + treeCollider.width - playerCollider.x
-                );
+                ));
 
                 const overlapY = Math.min(
                     playerCollider.y + playerCollider.height - treeCollider.y,
